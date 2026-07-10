@@ -1,0 +1,30 @@
+[
+  {
+    "id": "demo-user-alex",
+    "name": "Alex",
+    "avatarColor": "blue",
+    "weeklyWins": 2,
+    "totalPoints": 45
+  },
+  {
+    "id": "demo-user-maya",
+    "name": "Maya",
+    "avatarColor": "purple",
+    "weeklyWins": 1,
+    "totalPoints": 38
+  },
+  {
+    "id": "demo-user-jordan",
+    "name": "Jordan",
+    "avatarColor": "green",
+    "weeklyWins": 3,
+    "totalPoints": 52
+  },
+  {
+    "id": "demo-user-sam",
+    "name": "Sam",
+    "avatarColor": "orange",
+    "weeklyWins": 0,
+    "totalPoints": 21
+  }
+]
