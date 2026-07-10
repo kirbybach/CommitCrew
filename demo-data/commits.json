@@ -1,0 +1,52 @@
+[
+  {
+    "id": "demo-commit-001",
+    "userId": "demo-user-alex",
+    "userName": "Alex",
+    "message": "worked on my portfolio site for 2h and fixed the mobile layout",
+    "grade": 14,
+    "feedback": "solid ship. real feature work and clear momentum.",
+    "createdAt": "2026-07-01T18:30:00.000Z",
+    "tags": ["portfolio", "frontend"]
+  },
+  {
+    "id": "demo-commit-002",
+    "userId": "demo-user-maya",
+    "userName": "Maya",
+    "message": "studied binary search patterns for 90m and solved two practice problems",
+    "grade": 11,
+    "feedback": "good reps. not flashy, but this is how consistency stacks.",
+    "createdAt": "2026-07-01T20:10:00.000Z",
+    "tags": ["algorithms", "study"]
+  },
+  {
+    "id": "demo-commit-003",
+    "userId": "demo-user-jordan",
+    "userName": "Jordan",
+    "message": "fixed the auth redirect bug and added tests around login state",
+    "grade": 16,
+    "feedback": "real engineering work. bug fix plus tests is a strong commit.",
+    "createdAt": "2026-07-02T14:45:00.000Z",
+    "tags": ["backend", "testing"]
+  },
+  {
+    "id": "demo-commit-004",
+    "userId": "demo-user-sam",
+    "userName": "Sam",
+    "message": "ran 3 miles before class",
+    "grade": 7,
+    "feedback": "clean discipline. simple, useful, done.",
+    "createdAt": "2026-07-02T11:20:00.000Z",
+    "tags": ["fitness"]
+  },
+  {
+    "id": "demo-commit-005",
+    "userId": "demo-user-alex",
+    "userName": "Alex",
+    "message": "planned tomorrow's tasks",
+    "grade": 3,
+    "feedback": "planning is fine, but the board needs action next.",
+    "createdAt": "2026-07-03T01:05:00.000Z",
+    "tags": ["planning"]
+  }
+]
