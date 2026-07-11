@@ -1,28 +1,424 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --background: #fffdf7;
+  --foreground: #2c2c2c;
+  --paper: #fffdf7;
+  --paper-deep: #f5f0e8;
+  --card: #fffaf0;
+  --soft-card: rgba(255, 250, 240, 0.88);
+  --note: #f8f3df;
+  --button-bg: #fffdf7;
+  --button-hover: #f5f0e8;
+  --panel: rgba(255, 250, 240, 0.72);
+  --grid-line-a: rgba(23, 76, 53, 0.045);
+  --grid-line-b: rgba(23, 76, 53, 0.04);
+  --page-glow: rgba(214, 165, 54, 0.16);
+  --tape: rgba(214, 165, 54, 0.36);
+  --tape-line: rgba(44, 44, 44, 0.22);
+  --bronze: #9a6427;
+  --ink: #2c2c2c;
+  --muted-ink: #5f5a50;
+  --club-green: #174c35;
+  --board-green: #174c35;
+  --club-green-dark: #0f3326;
+  --club-green-light: #dfeee3;
+  --score-green: #1f6b47;
+  --gold: #d6a536;
+  --pencil-blue: #4a90d9;
+  --pencil-red: #d94f45;
+  --line: #2c2c2c;
+  --soft-line: #d8cdb8;
+  --shadow: 4px 4px 0 var(--line);
+  --shadow-soft: 3px 3px 0 rgba(44, 44, 44, 0.25);
+  --font-heading: "Trebuchet MS", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-body: "Comic Sans MS", "Marker Felt", "Segoe Print", system-ui, sans-serif;
+  --font-score: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #101512;
+  --foreground: #f7f0dc;
+  --paper: #131a16;
+  --paper-deep: #243027;
+  --card: #1b231d;
+  --soft-card: rgba(27, 35, 29, 0.88);
+  --note: #242817;
+  --button-bg: #20291f;
+  --button-hover: #2b372b;
+  --panel: rgba(27, 35, 29, 0.86);
+  --grid-line-a: rgba(255, 253, 247, 0.045);
+  --grid-line-b: rgba(214, 165, 54, 0.035);
+  --page-glow: rgba(214, 165, 54, 0.12);
+  --tape: rgba(214, 165, 54, 0.48);
+  --tape-line: rgba(255, 253, 247, 0.24);
+  --ink: #f7f0dc;
+  --muted-ink: #c8bea7;
+  --club-green: #46b77a;
+  --board-green: #1f6b47;
+  --club-green-dark: #174c35;
+  --club-green-light: #274737;
+  --score-green: #46b77a;
+  --gold: #e0b449;
+  --pencil-blue: #82bdf0;
+  --pencil-red: #f07f75;
+  --line: #080b09;
+  --soft-line: #4b4639;
+  --bronze: #d7924a;
+  --shadow: 4px 4px 0 #050706;
+  --shadow-soft: 3px 3px 0 rgba(0, 0, 0, 0.48);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-body);
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  letter-spacing: 0;
+}
+
+button,
+a,
+input {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  letter-spacing: 0;
+}
+
+.clubhouse-page {
+  min-height: 100vh;
+  overflow-x: clip;
+  background:
+    linear-gradient(var(--grid-line-a) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-b) 1px, transparent 1px),
+    radial-gradient(circle at top left, var(--page-glow), transparent 28rem),
+    var(--paper);
+  background-size: 28px 28px, 28px 28px, auto, auto;
+  color: var(--ink);
+}
+
+.clubhouse-page * {
+  min-width: 0;
+}
+
+.clubhouse-page code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.clubhouse-shell {
+  width: calc(100vw - 2rem);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+}
+
+.sketch-card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+}
+
+.sketch-card-soft {
+  background: var(--soft-card);
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow-soft);
+}
+
+.clubhouse-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.35rem;
+  border: 2px solid var(--line);
+  border-radius: 5px;
+  background: var(--button-bg);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--line);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.clubhouse-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--line);
+  background: var(--button-hover);
+}
+
+.clubhouse-button-green {
+  background: var(--board-green);
+  color: #fffdf7;
+}
+
+.clubhouse-button-green:hover {
+  background: var(--club-green-dark);
+}
+
+.wavy-title {
+  position: relative;
+  display: inline-block;
+}
+
+.wavy-title::after {
+  content: "";
+  display: block;
+  height: 7px;
+  margin-top: 0.25rem;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='7'%3E%3Cpath d='M2 4 Q12 1 22 4 Q32 7 42 3 Q52 0 62 4 Q72 7 82 3 Q92 0 102 4 Q112 7 122 3 Q132 0 142 4 Q152 7 162 3 Q172 1 178 4' fill='none' stroke='%23d6a536' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left center;
+}
+
+.clubhouse-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255, 253, 247, 0.08), transparent 36%),
+    var(--board-green);
+  color: #fffdf7;
+}
+
+.clubhouse-hero::after {
+  content: "";
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1rem;
+  width: 132px;
+  height: 88px;
+  opacity: 0.16;
+  background: url("data:image/svg+xml,%3Csvg width='132' height='88' viewBox='0 0 132 88' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 70 C35 20 72 12 116 30' fill='none' stroke='%23fffdf7' stroke-width='4' stroke-linecap='round' stroke-dasharray='7 9'/%3E%3Cpath d='M109 25 L123 30 L110 37 Z' fill='%23fffdf7'/%3E%3Ccircle cx='21' cy='65' r='5' fill='none' stroke='%23fffdf7' stroke-width='3'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+
+.tournament-board-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 253, 247, 0.06), transparent 34%),
+    var(--board-green);
+  color: #fffdf7;
+}
+
+.scoreboard-grid {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 4.5rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scoreboard-header {
+  color: rgba(255, 253, 247, 0.72);
+  font-family: var(--font-score);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.scoreboard-row {
+  border-top: 1px solid rgba(255, 253, 247, 0.2);
+  color: #fffdf7;
+}
+
+.scoreboard-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid rgba(255, 253, 247, 0.65);
+  border-radius: 4px;
+  font-family: var(--font-score);
+}
+
+.scoreboard-number {
+  font-family: var(--font-score);
+  font-weight: 800;
+  text-align: right;
+}
+
+.paper-slip {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow-soft);
+}
+
+.paper-slip::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 1.25rem;
+  width: 68px;
+  height: 19px;
+  background: var(--tape);
+  border: 1px solid var(--tape-line);
+  transform: rotate(-2deg);
+}
+
+.scorekeeper-note {
+  background: var(--note);
+  border-left: 5px solid var(--gold);
+  border-radius: 5px;
+}
+
+.trophy-plaque {
+  background:
+    linear-gradient(90deg, rgba(214, 165, 54, 0.16), transparent),
+    var(--card);
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow-soft);
+}
+
+.chart-panel {
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 6px;
+}
+
+.doc-stat,
+.rule-note {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+}
+
+.doc-stat {
+  min-height: 8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--club-green);
+}
+
+.command-ticket {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
+  width: fit-content;
+  max-width: 100%;
+  border: 2px solid var(--line);
+  border-radius: 5px;
+  background: var(--board-green);
+  color: #fffdf7;
+  box-shadow: 2px 2px 0 var(--line);
+  padding: 0.45rem 0.65rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-family: var(--font-score);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.score-formula {
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  background: var(--board-green);
+  color: #fffdf7;
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  text-align: center;
+  font-family: var(--font-score);
+  font-size: clamp(1rem, 3vw, 1.6rem);
+  font-weight: 900;
+}
+
+.release-timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.release-note h3 {
+  overflow-wrap: break-word;
+}
+
+.release-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 1.2rem;
+  width: 4px;
+  background: var(--club-green);
+  border: 1px solid var(--line);
+}
+
+.release-note {
+  margin-left: 2.3rem;
+  width: calc(100% - 2.3rem);
+}
+
+.release-note::after {
+  content: "";
+  position: absolute;
+  left: -2.05rem;
+  top: 1.6rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  background: var(--gold);
+}
+
+@media (min-width: 640px) {
+  .scoreboard-grid {
+    grid-template-columns: 3rem minmax(0, 1fr) 4.5rem 4.5rem 5.5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .clubhouse-shell {
+    width: calc(100vw - 1rem);
+    max-width: 1120px;
+    padding-top: 1rem;
+  }
+
+  .clubhouse-hero :is(h1, p) {
+    max-width: calc(100vw - 5rem);
+  }
+
+  .scoreboard-grid {
+    gap: 0.45rem;
+  }
+
+  .scoreboard-header {
+    font-size: 0.62rem;
+  }
+
+  .release-timeline::before {
+    left: 0.6rem;
+  }
+
+  .release-timeline {
+    display: block;
+    padding-left: 1.45rem;
+  }
+
+  .release-note {
+    width: calc(100vw - 4.25rem);
+    max-width: calc(100vw - 4.25rem);
+    margin: 0 0 1.25rem 0;
+  }
+
+  .release-note::after {
+    left: -1.55rem;
+  }
 }
 
 /* Privacy / Anti-Flicker */

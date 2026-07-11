@@ -9,7 +9,7 @@ Group chat message
       ↓
 Bot command parser
       ↓
-AI scoring service
+Scorekeeper service
       ↓
 Database
       ↓
@@ -36,9 +36,9 @@ The bot is responsible for:
 - sending replies back to the group
 - avoiding duplicate processing
 
-### 2. Scoring service
+### 2. Scorekeeper service
 
-The scoring service evaluates a commit based on:
+The scorekeeper evaluates a commit based on:
 
 - effort
 - complexity
@@ -77,19 +77,21 @@ The public demo should only use fake data. Real group-chat data must stay out of
 
 The dashboard turns chat activity into visible progress:
 
-- leaderboard
-- recent commits
-- season view
-- all-time stats
+- golf-style clubhouse scoreboard
+- recent commit slips
+- live season view
+- all-time standings
 - user profiles
 - charts over time
+- Hall of Fame for completed seasons
 
 ### 5. Demo mode
 
 Demo mode should be the default for public development. It should:
 
-- load from `demo-data/`
-- avoid external API calls by default
+- load local seed data from `apps/web/src/lib/demoData.ts`
+- show Season 1 as completed and Season 2 as the live board
+- avoid external API calls by default in the web demo
 - avoid connecting to production databases
 - use fake names and neutral sample commits
 

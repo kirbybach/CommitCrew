@@ -4,7 +4,7 @@ CommitCrew should grow in stages. The goal is to avoid overbuilding before the a
 
 ## Stage 1: Public case study
 
-Status: in progress
+Status: shipped
 
 Goals:
 
@@ -24,20 +24,24 @@ Deliverables:
 
 ## Stage 2: Static demo dashboard
 
+Status: shipped
+
 Goal: show what CommitCrew feels like without requiring a real group chat integration.
 
-Possible features:
+Shipped features:
 
-- load fake commits from `demo-data/`
-- show leaderboard
+- load fake commits from local demo seed data
+- show a golf-inspired clubhouse scoreboard
 - show recent commits
-- show simple weekly points chart
-- show example bot responses
-- include a demo-mode banner
+- show a simple points chart
+- show Season 1 in the Hall of Fame and Season 2 as the live demo season
+- make docs and changelog pages match the public demo style
 
 This should not require Supabase, OpenAI, WhatsApp, or any production credentials.
 
 ## Stage 3: Local bot simulation
+
+Status: next
 
 Goal: simulate the core loop without connecting to a real messaging platform.
 

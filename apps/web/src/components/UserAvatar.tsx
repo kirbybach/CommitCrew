@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { useDemoStore } from '../stores/useDemoStore';
-import { anonymize } from '../utils/anonymizer';
+import { avatarGradient } from '../utils/avatarGradient';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 interface UserAvatarProps {
     name?: string;
     avatarUrl?: string | null;
-    userId?: string; // Critical for consistent anonymization
+    userId?: string;
     size?: 'sm' | 'md' | 'lg' | 'xl';
     className?: string;
 }
@@ -31,28 +31,22 @@ export default function UserAvatar({ name, avatarUrl, userId, size = 'md', class
     };
 
     const baseClass = twMerge(clsx(
-        "rounded-full flex items-center justify-center font-bold object-cover pii-safe",
+        "rounded-full border-2 border-[var(--line)] shadow-[2px_2px_0_var(--line)] flex items-center justify-center font-bold object-cover pii-safe",
         sizeClasses[size],
         { "not-mounted": !mounted },
         className
     ));
 
-    // If Demo Mode is Active (and mounted)
     if (mounted && isDemoMode) {
-        // Generate Gradient
-        const gradient = anonymize(userId || name || 'unknown', 'avatar');
+        const gradient = avatarGradient(userId || name || 'unknown');
         return (
             <div
                 className={baseClass}
                 style={{ background: gradient }}
             >
-                {/* No text in avatar for demo mode, or maybe generic icon? Keeping it clean with just gradient */}
             </div>
         );
     }
-
-    // Default Rendering (Real Data)
-    // Note: The 'pii-safe' class on the container ensures this is hidden via CSS until hydration complete.
 
     if (avatarUrl) {
         return (
@@ -60,9 +54,6 @@ export default function UserAvatar({ name, avatarUrl, userId, size = 'md', class
                 src={avatarUrl}
                 alt={name || 'User'}
                 className={baseClass}
-            // Need to remove pii-safe here if we don't want the img tag itself to be responsible, 
-            // but actually we DO want it hidden.
-            // However, img tags don't have 'children', so baseClass works on the img itself.
             />
         );
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import { differenceInDays, endOfMonth } from 'date-fns';
+import { CalendarDays, Flag, Trophy } from 'lucide-react';
 
 interface SeasonBannerProps {
     season: {
@@ -24,52 +25,55 @@ export default function SeasonBanner({ season, leader }: SeasonBannerProps) {
     const daysRemaining = Math.max(0, differenceInDays(monthEnd, now) + 1);
 
     return (
-        <div className="relative rounded-2xl overflow-hidden">
-            {/* Animated gradient border */}
-            <div
-                className="absolute inset-0 rounded-2xl p-[1px]"
-                style={{
-                    background: 'linear-gradient(135deg, #34d399, #06b6d4, #8b5cf6, #f59e0b, #34d399)',
-                    backgroundSize: '300% 300%',
-                    animation: 'gradientShift 6s ease infinite',
-                }}
-            />
-            <div className="relative bg-neutral-900/95 backdrop-blur-sm rounded-2xl p-5 m-[1px]">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    {/* Left: Season info */}
-                    <div className="flex items-center gap-3">
-                        <span className="text-2xl">⚔️</span>
-                        <div>
-                            <h2 className="text-lg font-bold bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                                Season {season.season_number}: {season.label}
-                            </h2>
-                            {leader && leader.score > 0 ? (
-                                <p className="text-sm text-neutral-400">
-                                    👑 <span className="text-yellow-400 font-semibold">{leader.name}</span> leads with <span className="text-emerald-400 font-semibold">{leader.score} pts</span>
-                                </p>
-                            ) : (
-                                <p className="text-sm text-neutral-500 italic">No commits yet this season</p>
-                            )}
-                        </div>
+        <section className="clubhouse-hero sketch-card p-5 sm:p-7">
+            <div className="relative z-10 grid gap-5 lg:grid-cols-[1fr_260px] lg:items-end">
+                <div>
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase text-[#f3df9c]">
+                        <Flag size={16} />
+                        CommitCrew Invitational
                     </div>
+                    <h2 className="mt-3 max-w-3xl text-4xl font-black leading-tight sm:text-5xl">
+                        Season {season.season_number} is underway.
+                    </h2>
+                    <p className="mt-3 max-w-2xl text-base font-semibold text-[#fffdf7]/80 sm:text-lg">
+                        Drop a win in the chat. The board updates. The crew keeps playing.
+                    </p>
 
-                    {/* Right: Countdown */}
-                    <div className="flex items-center gap-2 bg-neutral-800/50 px-4 py-2 rounded-xl border border-neutral-700/50">
-                        <div className="text-center">
-                            <span className="text-xl font-bold text-white">{daysRemaining}</span>
-                            <span className="text-xs text-neutral-500 uppercase ml-1.5">days left</span>
+                    <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold">
+                        <div className="inline-flex items-center gap-2 rounded-[5px] border-2 border-[#fffdf7]/70 bg-[#fffdf7]/10 px-3 py-2">
+                            <CalendarDays size={17} />
+                            {season.label}
+                        </div>
+                        {leader && leader.score > 0 ? (
+                            <div className="inline-flex items-center gap-2 rounded-[5px] border-2 border-[#fffdf7]/70 bg-[#fffdf7]/10 px-3 py-2">
+                                <Trophy size={17} />
+                                {leader.name} leads with {leader.score} pts
+                            </div>
+                        ) : (
+                            <div className="inline-flex items-center gap-2 rounded-[5px] border-2 border-[#fffdf7]/70 bg-[#fffdf7]/10 px-3 py-2">
+                                Waiting on the first commit
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="relative z-10 border-2 border-[#fffdf7]/55 bg-[#fffdf7]/10 p-4 text-[#fffdf7] shadow-[3px_3px_0_rgba(0,0,0,0.22)]">
+                    <p className="text-xs font-black uppercase text-[#f3df9c]">Season window</p>
+                    <div className="mt-2 flex items-end gap-2">
+                        <span className="font-mono text-6xl font-black leading-none">{daysRemaining}</span>
+                        <span className="pb-2 text-sm font-black uppercase text-[#fffdf7]/75">days left</span>
+                    </div>
+                    <div className="mt-4 border-t-2 border-[#fffdf7]/35 pt-3">
+                        <p className="text-xs font-black uppercase text-[#fffdf7]/70">Current leader</p>
+                        <div className="mt-1 flex items-center justify-between gap-3">
+                            <span className="text-xl font-black">{leader && leader.score > 0 ? leader.name : 'No leader'}</span>
+                            <span className="font-mono text-lg font-black text-[#f3df9c]">
+                                {leader && leader.score > 0 ? `${leader.score}` : '0'}
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <style jsx>{`
-                @keyframes gradientShift {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-            `}</style>
-        </div>
+        </section>
     );
 }

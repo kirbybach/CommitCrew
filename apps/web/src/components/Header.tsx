@@ -2,52 +2,45 @@
 "use client";
 
 import Link from 'next/link';
-import { Sparkles, HelpCircle, Users, Eye, EyeOff } from 'lucide-react';
-import { useDemoStore } from '../stores/useDemoStore';
-import { useEffect, useState } from 'react';
+import { Sparkles, HelpCircle, Users, Flag } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
-    const { isDemoMode, toggleDemoMode } = useDemoStore();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
     return (
-        <div className="flex items-center justify-between border-b border-neutral-800 pb-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                CommitCrew 🚀
-            </h1>
-            <div className="flex gap-4 text-sm text-neutral-400 items-center">
+        <header className="sketch-card bg-[var(--card)] px-4 py-3 sm:px-5 sm:py-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <div className="flex items-center gap-2 text-[0.72rem] font-bold uppercase text-[var(--club-green)]">
+                        <Flag size={15} />
+                        CommitCrew clubhouse
+                    </div>
+                    <h1 className="mt-1 text-3xl font-black text-[var(--ink)] sm:text-4xl">
+                        CommitCrew
+                    </h1>
+                    <p className="mt-1 max-w-xl text-sm font-semibold text-[var(--muted-ink)] sm:text-base">
+                        A group-chat scoreboard for people trying to actually do stuff.
+                    </p>
+                </div>
 
-                {/* Demo Mode Toggle */}
-                <button
-                    onClick={toggleDemoMode}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded transition-colors ${isDemoMode
-                        ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
-                        : 'bg-neutral-800 hover:bg-neutral-700 text-white'
-                        }`}
-                    title="Toggle Demo Mode (Anonymize Data)"
-                >
-                    {mounted && isDemoMode ? <EyeOff size={16} /> : <Eye size={16} />}
-                    <span className="hidden sm:inline">{isDemoMode ? 'Demo On' : 'Demo Off'}</span>
-                </button>
-
-                <Link
-                    href="/changelog"
-                    className="flex items-center gap-1 bg-neutral-800 hover:bg-neutral-700 px-3 py-1.5 rounded transition-colors text-white"
-                >
-                    <Sparkles size={16} /> What's New
-                </Link>
-                <Link
-                    href="/docs"
-                    className="flex items-center gap-1 bg-neutral-800 hover:bg-neutral-700 px-3 py-1.5 rounded transition-colors text-white"
-                >
-                    <HelpCircle size={16} /> Docs
-                </Link>
-                <span className="flex items-center gap-1 border-l border-neutral-700 pl-4 hidden md:flex"><Users size={16} /> AI accountability bot</span>
+                <div className="flex flex-wrap gap-3 text-sm font-bold text-[var(--ink)]">
+                    <ThemeToggle />
+                    <Link
+                        href="/changelog"
+                        className="clubhouse-button px-3 py-1.5"
+                    >
+                        <Sparkles size={16} /> What&apos;s New
+                    </Link>
+                    <Link
+                        href="/docs"
+                        className="clubhouse-button clubhouse-button-green px-3 py-1.5"
+                    >
+                        <HelpCircle size={16} /> Rules
+                    </Link>
+                    <span className="hidden items-center gap-1 border-l-2 border-[var(--line)] pl-3 text-[var(--muted-ink)] md:flex">
+                        <Users size={16} /> Fake crew, real scoreboard
+                    </span>
+                </div>
             </div>
-        </div>
+        </header>
     );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { formatDistanceToNow, format } from 'date-fns';
-import { Activity, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Activity, Trophy, ChevronLeft, ChevronRight, BarChart3, ClipboardList, Flag } from 'lucide-react';
 import Link from 'next/link';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
@@ -14,7 +14,6 @@ import PrivacyText from '../components/PrivacyText';
 import SeasonBanner from '../components/SeasonBanner';
 import HallOfFame from '../components/HallOfFame';
 import { useDemoStore } from '../stores/useDemoStore';
-import { anonymize } from '../utils/anonymizer';
 import { demoCommits, demoSeasons, demoUsers } from '../lib/demoData';
 
 const MONTH_NAMES = [
@@ -70,7 +69,6 @@ export default function Home() {
 
   const [showGraph, setShowGraph] = useState(false);
   const { isDemoMode } = useDemoStore();
-  const [mounted, setMounted] = useState(false);
 
   // Season state
   const [currentSeason, setCurrentSeason] = useState<any>(null);
@@ -80,10 +78,6 @@ export default function Home() {
   // Raw data (always all-time, filtered client-side for instant toggle)
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [allStats, setAllStats] = useState<any[]>([]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     fetchData(page);
@@ -213,28 +207,10 @@ export default function Home() {
     return sorted.length > 0 ? sorted[0] : null;
   }, [allUsers, allStats, currentSeason]);
 
-  const displaySeasonLeader = useMemo(() => {
-    if (!seasonLeader) return null;
-    if (isDemoMode) {
-      return {
-        ...seasonLeader,
-        name: anonymize(seasonLeader.id, 'name')
-      };
-    }
-    return seasonLeader;
-  }, [seasonLeader, isDemoMode]);
-
-  // Derived State for Anonymized Charts
-  const displayLeaderboard = useMemo(() => {
-    if (!mounted || !isDemoMode) return leaderboard;
-    return leaderboard.map((u: any) => ({
-      ...u,
-      name: anonymize(u.uid, 'name')
-    }));
-  }, [leaderboard, isDemoMode, mounted]);
+  const displaySeasonLeader = seasonLeader;
+  const displayLeaderboard = leaderboard;
 
   const displayGraphData = useMemo(() => {
-    if (!mounted) return graphData;
     const nameMap = new Map<string, string>();
     leaderboard.forEach((u: any) => nameMap.set(u.uid, u.name));
     return graphData.map((point: any) => {
@@ -242,13 +218,21 @@ export default function Home() {
       Object.keys(point).forEach(key => {
         if (key !== 'date') {
           const uid = key;
-          const displayName = isDemoMode ? anonymize(uid, 'name') : (nameMap.get(uid) || 'Unknown');
+          const displayName = nameMap.get(uid) || 'Unknown';
           newPoint[displayName] = point[uid];
         }
       });
       return newPoint;
     });
-  }, [graphData, isDemoMode, mounted, leaderboard]);
+  }, [graphData, leaderboard]);
+
+  const boardStats = useMemo(() => {
+    return {
+      totalPoints: leaderboard.reduce((sum: number, user: any) => sum + (user.score || 0), 0),
+      totalCommits: leaderboard.reduce((sum: number, user: any) => sum + (user.count || 0), 0),
+      activePlayers: leaderboard.filter((user: any) => (user.score || 0) > 0).length,
+    };
+  }, [leaderboard]);
 
 
   async function fetchData(pageNum: number) {
@@ -333,11 +317,11 @@ export default function Home() {
   }
 
   // Generate colors for lines
-  const colors = ['#34d399', '#facc15', '#60a5fa', '#f472b6', '#a78bfa'];
+  const colors = ['#1f6b47', '#d6a536', '#4a90d9', '#d94f45', '#8b5cf6'];
 
   return (
-    <main className="min-h-screen bg-neutral-900 text-white p-8 font-sans relative">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <main className="clubhouse-page">
+      <div className="clubhouse-shell space-y-7">
 
         {/* Extracted Header */}
         <Header />
@@ -346,19 +330,90 @@ export default function Home() {
           leader={displaySeasonLeader}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <section className="sketch-card tournament-board-panel overflow-hidden">
+          <div className="flex flex-col gap-4 border-b-2 border-[#fffdf7]/35 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
+            <div>
+              <p className="flex items-center gap-2 text-xs font-black uppercase text-[#f3df9c]">
+                <Flag size={15} />
+                Tournament Board
+              </p>
+              <h2 className="mt-1 text-3xl font-black sm:text-4xl">
+                {currentSeason ? `Season ${currentSeason.season_number} Standings` : 'Season Standings'}
+              </h2>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-center text-xs font-black uppercase">
+              <div className="border-2 border-[#fffdf7]/60 px-3 py-2">
+                <span className="block font-mono text-xl">{boardStats.activePlayers}</span>
+                Players
+              </div>
+              <div className="border-2 border-[#fffdf7]/60 px-3 py-2">
+                <span className="block font-mono text-xl">{boardStats.totalCommits}</span>
+                Commits
+              </div>
+              <div className="border-2 border-[#fffdf7]/60 px-3 py-2">
+                <span className="block font-mono text-xl">{boardStats.totalPoints}</span>
+                Points
+              </div>
+            </div>
+          </div>
+
+          <div className="px-4 py-2 sm:px-5">
+            <div className="scoreboard-grid scoreboard-header py-2">
+              <span>Rank</span>
+              <span>Player</span>
+              <span className="hidden text-right sm:block">Wins</span>
+              <span className="hidden text-right sm:block">Commits</span>
+              <span className="text-right">Total</span>
+            </div>
+            {displayLeaderboard.map((user: any, i) => (
+              <Link
+                href={`/user/${user.uid}`}
+                key={user.uid}
+                className="scoreboard-grid scoreboard-row py-3 transition-colors hover:bg-[#fffdf7]/10"
+              >
+                <span className="scoreboard-rank">#{i + 1}</span>
+                <span className="min-w-0">
+                  <span className="flex items-center gap-2 truncate text-lg font-black pii-safe">
+                    {pastChampionIds.has(user.uid) && <Trophy size={16} className="shrink-0 text-[#f3df9c]" />}
+                    {user.name}
+                  </span>
+                  {i === 0 && <span className="text-xs font-black uppercase text-[#f3df9c]">Current leader</span>}
+                </span>
+                <span className="scoreboard-number hidden sm:block">{user.weekly_wins || 0}</span>
+                <span className="scoreboard-number hidden sm:block">{user.count || 0}</span>
+                <span className="scoreboard-number text-[#f3df9c]">{user.score}</span>
+              </Link>
+            ))}
+            {leaderboard.length === 0 && (
+              <div className="border-t border-[#fffdf7]/25 py-6 text-center text-sm font-bold text-[#fffdf7]/70">
+                Waiting for the first commit.
+              </div>
+            )}
+          </div>
+        </section>
+
+        <div className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_360px]">
 
           {/* Main Feed */}
-          <div className="md:col-span-2 space-y-6">
-            <h2 className="text-xl font-semibold flex items-center gap-2 text-emerald-400">
-              <Activity /> Recent Activity
-            </h2>
+          <section className="space-y-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="flex items-center gap-2 text-xs font-black uppercase text-[var(--club-green)]">
+                  <Activity size={16} /> Latest from the clubhouse
+                </p>
+                <h2 className="wavy-title text-3xl font-black text-[var(--ink)]">Commit Slips</h2>
+              </div>
+              <span className="sketch-card-soft inline-flex w-fit items-center gap-2 px-3 py-2 text-sm font-bold text-[var(--muted-ink)]">
+                <ClipboardList size={16} />
+                {isDemoMode ? 'Fictional public demo data' : 'Live crew feed'}
+              </span>
+            </div>
 
             <div className="space-y-4">
               {commits.map((commit) => (
-                <div key={commit.id} className="bg-neutral-800/50 p-4 rounded-xl border border-neutral-700/50 hover:border-emerald-500/30 transition-all">
-                  <div className="flex justify-between items-start mb-2">
-                    <Link href={`/user/${commit.user_id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <article key={commit.id} className="paper-slip p-4 pt-5 transition-transform hover:-translate-y-0.5 sm:p-5 sm:pt-6">
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <Link href={`/user/${commit.user_id}`} className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-80">
 
                       {/* Avatar Component */}
                       <UserAvatar
@@ -367,118 +422,114 @@ export default function Home() {
                         userId={commit.user_id}
                       />
 
-                      <div className="flex flex-col">
-                        <span className="font-medium text-neutral-200 hover:text-emerald-400 transition-colors">
+                      <div className="flex min-w-0 flex-col">
+                        <span className="truncate text-lg font-black text-[var(--ink)] transition-colors hover:text-[var(--club-green)]">
                           {/* Privacy Text Component */}
                           <PrivacyText text={commit.users?.name} id={commit.user_id} />
                         </span>
+                        <span className="text-xs font-bold uppercase text-[var(--muted-ink)]">commit filed</span>
                       </div>
                     </Link>
-                    <span className="text-xs text-neutral-500">{formatDistanceToNow(new Date(commit.created_at))} ago</span>
+                    <span className="shrink-0 text-right text-xs font-bold text-[var(--muted-ink)]">{formatDistanceToNow(new Date(commit.created_at))} ago</span>
                   </div>
 
-                  <p className="text-neutral-300 mb-3">{commit.message}</p>
+                  <p className="mb-4 text-lg font-semibold leading-relaxed text-[var(--ink)]">{commit.message}</p>
 
                   {commit.ai_feedback && (
-                    <div className={`bg-neutral-900/50 p-3 rounded-lg text-sm border-l-2 ${commit.grade < 0 ? 'border-red-500' : 'border-emerald-500'}`}>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className={`text-xs font-bold uppercase tracking-wider ${commit.grade < 0 ? 'text-red-500' : 'text-emerald-500'}`}>AI Coach</span>
-                        <span className={`font-bold ${commit.grade < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                    <div className="scorekeeper-note p-3 text-sm">
+                      <div className="mb-1 flex items-center justify-between gap-3">
+                        <span className="text-xs font-black uppercase text-[var(--club-green)]">Scorekeeper&apos;s Note</span>
+                        <span className={`font-mono text-lg font-black ${commit.grade < 0 ? 'text-[var(--pencil-red)]' : 'text-[var(--club-green)]'}`}>
                           {commit.grade > 0 ? '+' : ''}{commit.grade} pts
                         </span>
                       </div>
-                      <p className="text-neutral-400 italic">&quot;{commit.ai_feedback}&quot;</p>
+                      <p className="font-semibold text-[var(--muted-ink)]">&quot;{commit.ai_feedback}&quot;</p>
                     </div>
                   )}
-                </div>
+                </article>
               ))}
 
               {commits.length === 0 && (
-                <div className="text-center text-neutral-500 py-12">
-                  No commits yet. Waiting for WhatsApp messages...
+                <div className="sketch-card-soft py-12 text-center font-bold text-[var(--muted-ink)]">
+                  No commits yet. Waiting for the crew to post a win.
                 </div>
               )}
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex justify-between items-center mt-6">
+            <div className="mt-6 flex items-center justify-between">
               <button
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={page === 0 || isLoading}
-                className="flex items-center gap-1 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded transition-colors text-white"
+                className="clubhouse-button px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <ChevronLeft size={16} /> Previous
               </button>
-              <span className="text-neutral-400 text-sm">Page {page + 1}</span>
+              <span className="text-sm font-black text-[var(--muted-ink)]">Page {page + 1}</span>
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={commits.length < 15 || isLoading}
-                className="flex items-center gap-1 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded transition-colors text-white"
+                className="clubhouse-button px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Next <ChevronRight size={16} />
               </button>
             </div>
-          </div>
+          </section>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-xl font-semibold flex items-center gap-2 text-yellow-400">
-                  <Trophy /> Leaderboard
+          <aside className="space-y-6">
+            <section>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <h2 className="flex items-center gap-2 text-xl font-black text-[var(--club-green)]">
+                  <BarChart3 /> Momentum
                 </h2>
                 <button
                   onClick={() => setShowGraph(!showGraph)}
-                  className="text-xs bg-neutral-800 hover:bg-neutral-700 px-2 py-1 rounded text-neutral-400 transition-colors"
+                  className="clubhouse-button px-2 py-1 text-xs"
                 >
                   {showGraph ? 'Show List' : 'Show Graph'}
                 </button>
               </div>
               {/* Season / All-Time toggle */}
-              <div className="flex bg-neutral-800/50 rounded-lg p-1 gap-1">
+              <div className="sketch-card-soft flex gap-1 p-1">
                 <button
                   onClick={() => setSeasonView('season')}
-                  className={`flex-1 py-1.5 rounded-md text-xs font-semibold transition-all ${seasonView === 'season'
-                    ? 'bg-emerald-500/20 text-emerald-400 shadow-sm shadow-emerald-500/10'
-                    : 'text-neutral-500 hover:text-neutral-300'
+                  className={`flex-1 rounded-[4px] py-1.5 text-xs font-black transition-all ${seasonView === 'season'
+                    ? 'bg-[var(--board-green)] text-[#fffdf7]'
+                    : 'text-[var(--muted-ink)] hover:bg-[var(--paper-deep)]'
                     }`}
                 >
                   {currentSeason ? `Season ${currentSeason.season_number}` : 'Season'}
                 </button>
                 <button
                   onClick={() => setSeasonView('alltime')}
-                  className={`flex-1 py-1.5 rounded-md text-xs font-semibold transition-all ${seasonView === 'alltime'
-                    ? 'bg-neutral-700 text-white shadow-sm'
-                    : 'text-neutral-500 hover:text-neutral-300'
+                  className={`flex-1 rounded-[4px] py-1.5 text-xs font-black transition-all ${seasonView === 'alltime'
+                    ? 'bg-[var(--board-green)] text-[#fffdf7]'
+                    : 'text-[var(--muted-ink)] hover:bg-[var(--paper-deep)]'
                     }`}
                 >
                   All-Time
                 </button>
               </div>
-            </div>
+            </section>
 
-            <div className="bg-neutral-800/30 rounded-xl p-4 border border-neutral-700/50 min-h-[300px]">
+            <div className="chart-panel min-h-[300px] p-4">
               {showGraph ? (
                 <div className="h-[300px] w-full -ml-4">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={displayGraphData}>
-                      <XAxis dataKey="date" stroke="#525252" fontSize={12} tickLine={false} axisLine={false} />
+                      <XAxis dataKey="date" stroke="#5f5a50" fontSize={12} tickLine={false} axisLine={false} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: '#171717', border: '1px solid #404040', borderRadius: '8px' }}
-                        itemStyle={{ color: '#e5e5e5' }}
+                        contentStyle={{ backgroundColor: 'var(--card)', border: '2px solid var(--line)', borderRadius: '6px', boxShadow: 'var(--shadow-soft)' }}
+                        itemStyle={{ color: 'var(--ink)', fontWeight: 700 }}
+                        labelStyle={{ color: 'var(--club-green)', fontWeight: 900 }}
                       />
-                      <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
+                      <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '10px', color: 'var(--ink)' }} />
 
-                      {/* Need to map names dynamically here since keys change in demo mode */}
                       {displayLeaderboard.slice(0, 5).map((user: any, i) => (
                         <Line
                           key={user.uid}
                           type="linear"
-                          // Use the anonymized name here if demo mode, else real name.
-                          // displayLeaderboard already has 'name' anonymized, so we use user.name!
-                          // AND graphData needs to match these keys. 
-                          // displayGraphData also hashes keys if demo mode.
-                          // So user.name SHOULD match keys in displayGraphData.
                           dataKey={user.name}
                           stroke={colors[i % colors.length]}
                           strokeWidth={2}
@@ -491,31 +542,31 @@ export default function Home() {
               ) : (
                 <div className="space-y-3">
                   {displayLeaderboard.map((user: any, i) => (
-                    <Link href={`/user/${user.uid}`} key={i} className="flex items-center justify-between p-2 rounded hover:bg-neutral-700/30 transition-colors group">
-                      <div className="flex items-center gap-3">
-                        <span className={`font-mono font-bold w-4 ${i === 0 ? 'text-yellow-400' : 'text-neutral-500'}`}>#{i + 1}</span>
-                        <span className="group-hover:text-emerald-400 transition-colors pii-safe">
-                          {pastChampionIds.has(user.uid) && <span title="Past Season Champion" className="mr-1">👑</span>}
+                    <Link href={`/user/${user.uid}`} key={user.uid} className="group flex items-center justify-between border-b-2 border-[var(--soft-line)] p-2 transition-colors last:border-b-0 hover:bg-[var(--paper-deep)]">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className={`w-6 font-mono font-black ${i === 0 ? 'text-[var(--gold)]' : 'text-[var(--muted-ink)]'}`}>#{i + 1}</span>
+                        <span className="truncate font-black transition-colors group-hover:text-[var(--club-green)] pii-safe">
+                          {pastChampionIds.has(user.uid) && <Trophy size={14} className="mr-1 inline text-[var(--gold)]" />}
                           {user.name}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1 text-yellow-400 text-sm" title={seasonView === 'season' ? 'Weekly Wins (this season)' : 'Weekly Wins (all-time)'}>
+                      <div className="flex items-center gap-3 font-bold">
+                        <div className="flex items-center gap-1 text-sm text-[var(--gold)]" title={seasonView === 'season' ? 'Weekly Wins (this season)' : 'Weekly Wins (all-time)'}>
                           <Trophy size={14} />
                           <span className="font-semibold">{user.weekly_wins || 0}</span>
                         </div>
-                        <span className="font-bold text-emerald-400">{user.score} pts</span>
+                        <span className="font-mono font-black text-[var(--club-green)]">{user.score} pts</span>
                       </div>
                     </Link>
                   ))}
-                  {leaderboard.length === 0 && <span className="text-neutral-500 text-sm">No data yet.</span>}
+                  {leaderboard.length === 0 && <span className="text-sm font-bold text-[var(--muted-ink)]">No data yet.</span>}
                 </div>
               )}
             </div>
 
             {/* Hall of Fame */}
             <HallOfFame />
-          </div>
+          </aside>
 
         </div>
 
