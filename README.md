@@ -4,111 +4,150 @@
 
 CommitCrew turns casual group-chat progress updates into a lightweight accountability game. Members can log what they worked on, get AI-generated feedback, compete on leaderboards, track goals, and build momentum together.
 
-This repository is a sanitized public-facing version of an earlier private prototype. The original prototype was built for a real friend group and contains private group data, so this repo uses fake examples and documentation-first structure.
+This repository is a sanitized public version of a private prototype. The app structure and core code have been copied over, but private group-chat data, production credentials, auth/session files, real identifiers, internal debug scripts, and old git history are not included. Demo data is fake.
 
-## Why this exists
+## What It Does
 
-Group chats are where a lot of real accountability already happens, but they are messy:
-
-- progress updates disappear in the scroll
-- goals are hard to track over time
-- follow-up depends on people remembering
-- leaderboards, streaks, and momentum have to be tracked manually
-
-CommitCrew explores a simple idea: **what if your group chat could become a shared scoreboard for getting things done?**
-
-## Core concept
-
-A member sends a message like:
+A group member sends a message like:
 
 ```txt
 @c worked on my portfolio site for 2h and fixed the mobile layout
 ```
 
-The bot can then:
+The bot can:
 
-1. score the update using an AI judge
+1. score the update with an AI judge
 2. reply with short feedback
-3. save the commit to a database
+3. save the commit to Supabase
 4. update individual and group stats
-5. show progress on a dashboard
-6. support goals, challenges, and weekly seasons
+5. show progress on the web dashboard
+6. support goals, callouts, wagers, disputes, reactions, and seasons
 
-## Example bot response
+Example response:
 
 ```txt
 CommitCrew: Alex +14 pts
 
-solid ship. real feature work, clear time investment, and actually moved the project forward.
+solid ship. real feature work, clear time investment, and actual progress.
 ```
 
-## Example features
+## Demo Safety
 
-- **Progress commits** — log completed work directly from chat
-- **AI scoring** — grade work based on complexity, effort, and impact
-- **Leaderboards** — track weekly, monthly, and all-time points
-- **Goals** — connect commits to longer-term outcomes
-- **Callouts** — challenge another member to finish something by a deadline
-- **Wagers** — bet points on your own task completion
-- **Dashboard** — view commits, stats, trends, and seasons
-- **Demo mode** — use fake data for public screenshots and development
+The public repo defaults to demo mode:
 
-## Tech direction
+- `NEXT_PUBLIC_DEMO_MODE=true` makes the web app use fake local data.
+- `DEMO_MODE=true` keeps the bot from connecting to real chat, Supabase, OpenAI, or cron integrations.
+- `demo-data/` and `apps/web/src/lib/demoData.ts` contain fictional users and neutral sample commits.
+- Real production data is not included.
 
-The original private prototype used:
+See [`PRIVACY.md`](./PRIVACY.md) for the sanitization rules.
 
-- WhatsApp bot integration
-- Next.js dashboard
-- Supabase database
-- OpenAI scoring and embeddings
-- TypeScript monorepo structure
+## Tech Stack
 
-This public repo is intentionally being rebuilt with privacy in mind before any production code is copied over.
+- TypeScript monorepo with npm workspaces
+- Next.js dashboard in `apps/web`
+- Node/TypeScript bot in `apps/bot`
+- Supabase schema and migrations in `supabase`
+- OpenAI scoring and embeddings when real integrations are enabled
+- Baileys-based WhatsApp integration when real bot mode is enabled
 
-## Privacy-first note
-
-The real prototype processed private group-chat activity. That means the public version needs to avoid:
-
-- real names
-- phone numbers
-- WhatsApp JIDs
-- message IDs
-- raw commit logs from private groups
-- database identifiers tied to real users
-- API keys or auth session files
-
-See [`PRIVACY.md`](./PRIVACY.md) for the rules guiding this repo.
-
-## Project status
-
-CommitCrew is currently a **sanitized case-study/demo repo**, not a hosted SaaS product.
-
-The current goal is to document the idea, architecture, and product direction without exposing private production data. A working demo may be added later with fake data only.
-
-## Possible future direction
-
-CommitCrew could become a niche accountability tool for:
-
-- student builders
-- founder houses
-- CS/project clubs
-- fitness groups
-- creative groups
-- hackathon teams
-- small friend groups trying to stay consistent
-
-The key product question is whether the accountability loop works outside the original group.
-
-## Repository structure
+## Repository Structure
 
 ```txt
 .
-├── demo-data/          # Fake sample data for screenshots and demos
+├── apps/
+│   ├── bot/            # Chat bot commands, services, cron, and API endpoint
+│   └── web/            # Next.js dashboard and demo UI
+├── demo-data/          # Fake sample data for public docs/screenshots
 ├── docs/               # Architecture, roadmap, and product notes
+├── supabase/           # Sanitized schema and migrations
 ├── .env.example        # Placeholder environment variables only
 ├── PRIVACY.md          # Public-data and safety guidelines
 └── README.md
 ```
+
+## Local Setup
+
+Install dependencies:
+
+```sh
+npm ci
+```
+
+Copy placeholders:
+
+```sh
+cp .env.example .env.local
+```
+
+The default `.env.example` values are safe for demo mode. Do not put real secrets in git.
+
+## Run The Web App
+
+From the repo root:
+
+```sh
+npm run dev --workspace=apps/web
+```
+
+Open the local Next.js URL. With `NEXT_PUBLIC_DEMO_MODE=true`, the dashboard loads fake data and does not require Supabase or dashboard auth.
+
+For a real dashboard connection, set:
+
+```txt
+NEXT_PUBLIC_DEMO_MODE=false
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+JWT_SECRET=...
+SHARED_DASHBOARD_PASSWORD_HASH=...
+SESSION_VERSION=1
+GITHUB_TOKEN=...
+```
+
+## Run The Bot
+
+Demo mode starts only the local health/API server and disables real chat integrations:
+
+```sh
+npm start --workspace=apps/bot
+```
+
+To run real integrations, set `DEMO_MODE=false` and provide:
+
+```txt
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+OPENAI_API_KEY=...
+OPENAI_MODEL=...
+COMMIT_API_KEY=...
+ALLOWED_GROUPS=...
+PRODUCTIVITY_GROUP_JID=...
+PHONE_NUMBER=...
+PORT=8080
+DEBUG_RAG=false
+```
+
+Real bot auth state is stored in `auth_info/`, which is ignored and must never be committed.
+
+## Checks
+
+```sh
+npm run build:bot
+npm run build:web
+npm run lint --workspace=apps/web
+```
+
+## Privacy Boundaries
+
+This repo should never contain:
+
+- real group-chat messages
+- real private user names
+- phone numbers or platform-specific user identifiers
+- source chat message references tied to real chats
+- private database IDs connected to real users
+- `.env`, `.env.local`, bot auth state, cookies, dumps, exports, or production credentials
+- internal scripts that audit users, print database contents, or inspect private production state
 
 ## License
 

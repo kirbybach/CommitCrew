@@ -1,0 +1,13 @@
+{
+  "name": "commitcrew",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build:bot",
+    "build:bot": "npm run build --workspace=apps/bot",
+    "build:web": "npm run build --workspace=apps/web",
+    "start": "npm start --workspace=apps/bot"
+  }
+}
