@@ -239,7 +239,13 @@ export default function ChangelogPage() {
                                         </p>
                                         <div className="flex items-center justify-between text-xs text-neutral-500">
                                             <div className="flex items-center gap-2">
-                                                <img src={commit.author?.avatar_url} className="w-4 h-4 rounded-full" alt="" />
+                                                {commit.author?.avatar_url ? (
+                                                    <img src={commit.author.avatar_url} className="w-4 h-4 rounded-full" alt="" />
+                                                ) : (
+                                                    <div className="w-4 h-4 rounded-full bg-neutral-700 text-[9px] text-neutral-300 flex items-center justify-center">
+                                                        {commit.commit.author.name?.charAt(0) || '?'}
+                                                    </div>
+                                                )}
                                                 <span>{commit.commit.author.name}</span>
                                             </div>
                                             <span>{formatDistanceToNow(new Date(commit.commit.author.date))} ago</span>
