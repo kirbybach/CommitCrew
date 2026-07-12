@@ -101,7 +101,7 @@ export default function HallOfFame() {
                                     {/* Podium — Top 3 */}
                                     <div className="grid grid-cols-3 gap-2 py-4">
                                         {top3.map((user, i) => (
-                                            <div key={user.user_id} className="border-2 border-[var(--line)] bg-white p-2 text-center shadow-[2px_2px_0_var(--line)]">
+                                            <div key={user.user_id} className="border-2 border-[var(--line)] bg-[var(--card)] p-2 text-center text-[var(--ink)] shadow-[2px_2px_0_var(--line)]">
                                                 <div className={`mb-1 flex items-center justify-center gap-1 text-xs font-black ${medalColors[i]}`}>
                                                     <Medal size={14} /> {medalLabels[i]}
                                                 </div>

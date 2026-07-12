@@ -3,8 +3,9 @@
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { formatDistanceToNow, format } from 'date-fns';
-import { Activity, Trophy, ChevronLeft, ChevronRight, BarChart3, ClipboardList, Flag } from 'lucide-react';
+import { Activity, Trophy, ChevronLeft, ChevronRight, BarChart3, ClipboardList } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 // Components
@@ -68,6 +69,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [showGraph, setShowGraph] = useState(false);
+  const pathname = usePathname();
   const { isDemoMode } = useDemoStore();
 
   // Season state
@@ -80,6 +82,8 @@ export default function Home() {
   const [allStats, setAllStats] = useState<any[]>([]);
 
   useEffect(() => {
+    if (pathname !== '/') return;
+
     fetchData(page);
 
     if (isDemoMode) return;
@@ -95,6 +99,24 @@ export default function Home() {
       supabase.removeChannel(channel);
     };
     // fetchData is defined below and intentionally keyed by page/demo mode here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, page, isDemoMode]);
+
+  useEffect(() => {
+    function refetchWhenPageIsShown() {
+      if (window.location.pathname === '/') {
+        fetchData(page);
+      }
+    }
+
+    window.addEventListener('pageshow', refetchWhenPageIsShown);
+    document.addEventListener('visibilitychange', refetchWhenPageIsShown);
+
+    return () => {
+      window.removeEventListener('pageshow', refetchWhenPageIsShown);
+      document.removeEventListener('visibilitychange', refetchWhenPageIsShown);
+    };
+    // Covers browser back/forward cache restoring the dashboard with stale client state.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, isDemoMode]);
 
@@ -226,14 +248,6 @@ export default function Home() {
     });
   }, [graphData, leaderboard]);
 
-  const boardStats = useMemo(() => {
-    return {
-      totalPoints: leaderboard.reduce((sum: number, user: any) => sum + (user.score || 0), 0),
-      totalCommits: leaderboard.reduce((sum: number, user: any) => sum + (user.count || 0), 0),
-      activePlayers: leaderboard.filter((user: any) => (user.score || 0) > 0).length,
-    };
-  }, [leaderboard]);
-
 
   async function fetchData(pageNum: number) {
     setIsLoading(true);
@@ -329,68 +343,6 @@ export default function Home() {
           season={currentSeason}
           leader={displaySeasonLeader}
         />
-
-        <section className="sketch-card tournament-board-panel overflow-hidden">
-          <div className="flex flex-col gap-4 border-b-2 border-[#fffdf7]/35 px-4 py-4 sm:flex-row sm:items-end sm:justify-between sm:px-5">
-            <div>
-              <p className="flex items-center gap-2 text-xs font-black uppercase text-[#f3df9c]">
-                <Flag size={15} />
-                Tournament Board
-              </p>
-              <h2 className="mt-1 text-3xl font-black sm:text-4xl">
-                {currentSeason ? `Season ${currentSeason.season_number} Standings` : 'Season Standings'}
-              </h2>
-            </div>
-            <div className="grid grid-cols-3 gap-2 text-center text-xs font-black uppercase">
-              <div className="border-2 border-[#fffdf7]/60 px-3 py-2">
-                <span className="block font-mono text-xl">{boardStats.activePlayers}</span>
-                Players
-              </div>
-              <div className="border-2 border-[#fffdf7]/60 px-3 py-2">
-                <span className="block font-mono text-xl">{boardStats.totalCommits}</span>
-                Commits
-              </div>
-              <div className="border-2 border-[#fffdf7]/60 px-3 py-2">
-                <span className="block font-mono text-xl">{boardStats.totalPoints}</span>
-                Points
-              </div>
-            </div>
-          </div>
-
-          <div className="px-4 py-2 sm:px-5">
-            <div className="scoreboard-grid scoreboard-header py-2">
-              <span>Rank</span>
-              <span>Player</span>
-              <span className="hidden text-right sm:block">Wins</span>
-              <span className="hidden text-right sm:block">Commits</span>
-              <span className="text-right">Total</span>
-            </div>
-            {displayLeaderboard.map((user: any, i) => (
-              <Link
-                href={`/user/${user.uid}`}
-                key={user.uid}
-                className="scoreboard-grid scoreboard-row py-3 transition-colors hover:bg-[#fffdf7]/10"
-              >
-                <span className="scoreboard-rank">#{i + 1}</span>
-                <span className="min-w-0">
-                  <span className="flex items-center gap-2 truncate text-lg font-black pii-safe">
-                    {pastChampionIds.has(user.uid) && <Trophy size={16} className="shrink-0 text-[#f3df9c]" />}
-                    {user.name}
-                  </span>
-                  {i === 0 && <span className="text-xs font-black uppercase text-[#f3df9c]">Current leader</span>}
-                </span>
-                <span className="scoreboard-number hidden sm:block">{user.weekly_wins || 0}</span>
-                <span className="scoreboard-number hidden sm:block">{user.count || 0}</span>
-                <span className="scoreboard-number text-[#f3df9c]">{user.score}</span>
-              </Link>
-            ))}
-            {leaderboard.length === 0 && (
-              <div className="border-t border-[#fffdf7]/25 py-6 text-center text-sm font-bold text-[#fffdf7]/70">
-                Waiting for the first commit.
-              </div>
-            )}
-          </div>
-        </section>
 
         <div className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1fr)_360px]">
 

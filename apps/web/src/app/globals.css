@@ -15,8 +15,6 @@
   --grid-line-a: rgba(23, 76, 53, 0.045);
   --grid-line-b: rgba(23, 76, 53, 0.04);
   --page-glow: rgba(214, 165, 54, 0.16);
-  --tape: rgba(214, 165, 54, 0.36);
-  --tape-line: rgba(44, 44, 44, 0.22);
   --bronze: #9a6427;
   --ink: #2c2c2c;
   --muted-ink: #5f5a50;
@@ -52,8 +50,6 @@
   --grid-line-a: rgba(255, 253, 247, 0.045);
   --grid-line-b: rgba(214, 165, 54, 0.035);
   --page-glow: rgba(214, 165, 54, 0.12);
-  --tape: rgba(214, 165, 54, 0.48);
-  --tape-line: rgba(255, 253, 247, 0.24);
   --ink: #f7f0dc;
   --muted-ink: #c8bea7;
   --club-green: #46b77a;
@@ -255,15 +251,8 @@ h4 {
 }
 
 .paper-slip::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 1.25rem;
-  width: 68px;
-  height: 19px;
-  background: var(--tape);
-  border: 1px solid var(--tape-line);
-  transform: rotate(-2deg);
+  content: none !important;
+  display: none !important;
 }
 
 .scorekeeper-note {
