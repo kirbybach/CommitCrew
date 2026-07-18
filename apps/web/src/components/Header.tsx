@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Sparkles, HelpCircle, Users, Flag } from 'lucide-react';
+import { Sparkles, HelpCircle, Users, Flag, Github, ExternalLink } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
@@ -22,21 +22,40 @@ export default function Header() {
                     </p>
                 </div>
 
-                <div className="flex flex-wrap gap-3 text-sm font-bold text-[var(--ink)]">
-                    <ThemeToggle />
-                    <Link
-                        href="/changelog"
-                        className="clubhouse-button px-3 py-1.5"
-                    >
-                        <Sparkles size={16} /> What&apos;s New
-                    </Link>
-                    <Link
-                        href="/docs"
-                        className="clubhouse-button clubhouse-button-green px-3 py-1.5"
-                    >
-                        <HelpCircle size={16} /> Rules
-                    </Link>
-                    <span className="hidden items-center gap-1 border-l-2 border-[var(--line)] pl-3 text-[var(--muted-ink)] md:flex">
+                <div className="flex flex-col items-end gap-3 text-sm font-bold text-[var(--ink)]">
+                    <div className="flex flex-wrap justify-end gap-3">
+                        <ThemeToggle />
+                        <Link
+                            href="/changelog"
+                            className="clubhouse-button px-3 py-1.5"
+                        >
+                            <Sparkles size={16} /> What&apos;s New
+                        </Link>
+                        <Link
+                            href="/docs"
+                            className="clubhouse-button clubhouse-button-green px-3 py-1.5"
+                        >
+                            <HelpCircle size={16} /> Rules
+                        </Link>
+                        <a
+                            href="https://kirbybach.me"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="clubhouse-button px-3 py-1.5"
+                        >
+                            kirbybach.me <ExternalLink size={14} aria-hidden="true" />
+                        </a>
+                        <a
+                            href="https://github.com/kirbybach/CommitCrew"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="clubhouse-button px-3 py-1.5"
+                            aria-label="CommitCrew on GitHub"
+                        >
+                            <Github size={17} aria-hidden="true" /> GitHub
+                        </a>
+                    </div>
+                    <span className="flex items-center justify-end gap-1 text-right text-[var(--muted-ink)]">
                         <Users size={16} /> Fake crew, real scoreboard
                     </span>
                 </div>
