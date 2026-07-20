@@ -41,22 +41,22 @@ export const demoUsers = [
     created_at: daysAgo(40),
   },
   {
-    id: 'demo-user-maya',
-    name: 'Maya',
+    id: 'demo-user-bree',
+    name: 'Bree',
     avatar_url: null,
     weekly_wins_count: 1,
     created_at: daysAgo(36),
   },
   {
-    id: 'demo-user-jordan',
-    name: 'Jordan',
+    id: 'demo-user-jason',
+    name: 'Jason',
     avatar_url: null,
     weekly_wins_count: 3,
     created_at: daysAgo(32),
   },
   {
-    id: 'demo-user-sam',
-    name: 'Sam',
+    id: 'demo-user-connor',
+    name: 'Connor',
     avatar_url: null,
     weekly_wins_count: 0,
     created_at: daysAgo(28),
@@ -66,7 +66,7 @@ export const demoUsers = [
 export const demoCommits = [
   {
     id: 'demo-s2-commit-001',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'fixed the auth redirect bug and added tests around login state',
     grade: 16,
     ai_feedback: 'real engineering work. bug fix plus tests is a strong commit.',
@@ -82,7 +82,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s2-commit-003',
-    user_id: 'demo-user-maya',
+    user_id: 'demo-user-bree',
     message: 'studied binary search patterns for 90m and solved two practice problems',
     grade: 11,
     ai_feedback: 'good reps. not flashy, but this is how consistency stacks.',
@@ -90,7 +90,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s2-commit-004',
-    user_id: 'demo-user-sam',
+    user_id: 'demo-user-connor',
     message: 'ran 3 miles before class',
     grade: 7,
     ai_feedback: 'clean discipline. simple, useful, done.',
@@ -106,7 +106,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s2-commit-006',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'refactored the leaderboard query and removed duplicate state',
     grade: 13,
     ai_feedback: 'nice cleanup. less drift, better dashboard.',
@@ -114,7 +114,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s2-commit-007',
-    user_id: 'demo-user-maya',
+    user_id: 'demo-user-bree',
     message: 'wrote the first draft of the project proposal',
     grade: 9,
     ai_feedback: 'useful forward motion. draft exists, now iterate.',
@@ -122,7 +122,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-001',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'shipped the season dashboard banner and standings snapshot',
     grade: 18,
     ai_feedback: 'big visible feature, clear product impact.',
@@ -138,7 +138,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-003',
-    user_id: 'demo-user-maya',
+    user_id: 'demo-user-bree',
     message: 'finished the systems design reading set and summarized notes',
     grade: 13,
     ai_feedback: 'solid learning loop with a useful artifact.',
@@ -146,7 +146,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-004',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'added season finalization logic and tested champion selection',
     grade: 14,
     ai_feedback: 'core feature work with tests where it mattered.',
@@ -162,7 +162,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-006',
-    user_id: 'demo-user-sam',
+    user_id: 'demo-user-connor',
     message: 'completed a long run and logged recovery notes',
     grade: 8,
     ai_feedback: 'good discipline and useful follow-through.',
@@ -170,7 +170,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-007',
-    user_id: 'demo-user-maya',
+    user_id: 'demo-user-bree',
     message: 'implemented the goal list empty state',
     grade: 10,
     ai_feedback: 'clean product polish that removes confusion.',
@@ -178,7 +178,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-008',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'debugged duplicate commit inserts and documented the fix',
     grade: 8,
     ai_feedback: 'unblocked reliability and left breadcrumbs.',
@@ -194,7 +194,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-010',
-    user_id: 'demo-user-sam',
+    user_id: 'demo-user-connor',
     message: 'meal prepped for the week and planned workouts',
     grade: 7,
     ai_feedback: 'useful setup work that makes consistency easier.',
@@ -202,7 +202,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-011',
-    user_id: 'demo-user-maya',
+    user_id: 'demo-user-bree',
     message: 'solved three graph traversal problems',
     grade: 8,
     ai_feedback: 'good practice volume with a focused theme.',
@@ -210,7 +210,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-012',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'cleaned up Supabase migration ordering',
     grade: 6,
     ai_feedback: 'not flashy, but it reduces future pain.',
@@ -226,7 +226,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-014',
-    user_id: 'demo-user-sam',
+    user_id: 'demo-user-connor',
     message: 'finished mobility work after training',
     grade: 6,
     ai_feedback: 'quiet consistency, still counts.',
@@ -234,7 +234,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-015',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'reviewed open bugs and triaged the top three',
     grade: 4,
     ai_feedback: 'good prioritization work, lighter execution.',
@@ -250,7 +250,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-017',
-    user_id: 'demo-user-maya',
+    user_id: 'demo-user-bree',
     message: 'reviewed spaced repetition cards for algorithms',
     grade: 7,
     ai_feedback: 'steady reps, good retention work.',
@@ -258,7 +258,7 @@ export const demoCommits = [
   },
   {
     id: 'demo-s1-commit-018',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     message: 'fixed a flaky test in the scoring service',
     grade: 2,
     ai_feedback: 'small fix, but useful stability.',
@@ -279,14 +279,14 @@ export const demoGoals = [
   },
   {
     id: 'demo-goal-study-systems',
-    user_id: 'demo-user-maya',
+    user_id: 'demo-user-bree',
     description: 'Review core systems design notes',
     status: 'active',
     created_at: daysAgo(8),
   },
   {
     id: 'demo-goal-finish-auth',
-    user_id: 'demo-user-jordan',
+    user_id: 'demo-user-jason',
     description: 'Finish auth reliability improvements',
     status: 'completed',
     created_at: daysAgo(18),
@@ -302,14 +302,14 @@ export const demoSeasons = [
     month: previousSeasonStart.getMonth() + 1,
     year: previousSeasonStart.getFullYear(),
     status: 'completed',
-    champion_id: 'demo-user-jordan',
-    champion_name: 'Jordan',
+    champion_id: 'demo-user-jason',
+    champion_name: 'Jason',
     champion_score: 52,
     standings: [
-      { user_id: 'demo-user-jordan', name: 'Jordan', score: 52, rank: 1, commit_count: 6 },
+      { user_id: 'demo-user-jason', name: 'Jason', score: 52, rank: 1, commit_count: 6 },
       { user_id: 'demo-user-alex', name: 'Alex', score: 45, rank: 2, commit_count: 5 },
-      { user_id: 'demo-user-maya', name: 'Maya', score: 38, rank: 3, commit_count: 4 },
-      { user_id: 'demo-user-sam', name: 'Sam', score: 21, rank: 4, commit_count: 3 },
+      { user_id: 'demo-user-bree', name: 'Bree', score: 38, rank: 3, commit_count: 4 },
+      { user_id: 'demo-user-connor', name: 'Connor', score: 21, rank: 4, commit_count: 3 },
     ],
   },
   {
@@ -323,10 +323,10 @@ export const demoSeasons = [
     champion_name: null,
     champion_score: null,
     standings: [
-      { user_id: 'demo-user-jordan', name: 'Jordan', score: 29, rank: 1, commit_count: 2 },
-      { user_id: 'demo-user-maya', name: 'Maya', score: 20, rank: 2, commit_count: 2 },
+      { user_id: 'demo-user-jason', name: 'Jason', score: 29, rank: 1, commit_count: 2 },
+      { user_id: 'demo-user-bree', name: 'Bree', score: 20, rank: 2, commit_count: 2 },
       { user_id: 'demo-user-alex', name: 'Alex', score: 17, rank: 3, commit_count: 2 },
-      { user_id: 'demo-user-sam', name: 'Sam', score: 7, rank: 4, commit_count: 1 },
+      { user_id: 'demo-user-connor', name: 'Connor', score: 7, rank: 4, commit_count: 1 },
     ],
   },
 ];

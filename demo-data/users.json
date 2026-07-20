@@ -7,22 +7,22 @@
     "totalPoints": 45
   },
   {
-    "id": "demo-user-maya",
-    "name": "Maya",
+    "id": "demo-user-bree",
+    "name": "Bree",
     "avatarColor": "purple",
     "weeklyWins": 1,
     "totalPoints": 38
   },
   {
-    "id": "demo-user-jordan",
-    "name": "Jordan",
+    "id": "demo-user-jason",
+    "name": "Jason",
     "avatarColor": "green",
     "weeklyWins": 3,
     "totalPoints": 52
   },
   {
-    "id": "demo-user-sam",
-    "name": "Sam",
+    "id": "demo-user-connor",
+    "name": "Connor",
     "avatarColor": "orange",
     "weeklyWins": 0,
     "totalPoints": 21

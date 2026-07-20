@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ArrowLeft, Trophy, Target, History, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import UserAvatar from '../../../components/UserAvatar';
 import PrivacyText from '../../../components/PrivacyText';
+import ThemeToggle from '../../../components/ThemeToggle';
 import { useDemoStore } from '../../../stores/useDemoStore';
 import { demoCommits, demoGoals, demoSeasons, demoUsers } from '../../../lib/demoData';
 
@@ -165,14 +166,14 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
             const isFuture = isAfter(currentDate, new Date());
 
             if (!isFuture) {
-                let fill = '#262626';
+                let fill = 'var(--activity-empty)';
                 if (score > 0) {
-                    if (score >= 10) fill = '#34d399';
-                    else if (score >= 5) fill = '#10b981';
-                    else fill = '#065f46';
+                    if (score >= 10) fill = 'var(--activity-high)';
+                    else if (score >= 5) fill = 'var(--activity-medium)';
+                    else fill = 'var(--activity-low)';
                 } else if (score < 0) {
-                    if (score <= -5) fill = '#ef4444';
-                    else fill = '#7f1d1d';
+                    if (score <= -5) fill = 'var(--activity-negative-high)';
+                    else fill = 'var(--activity-negative-low)';
                 }
 
                 const opacity = isCurrentMonth ? 1 : 0.2;
@@ -223,12 +224,15 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
             <div className="clubhouse-shell space-y-6 sm:space-y-8">
 
                 {/* Nav */}
-                <Link href="/" className="clubhouse-button w-fit px-3 py-2 text-sm font-bold">
-                    <ArrowLeft size={20} /> Back to Dashboard
-                </Link>
+                <nav className="flex items-center justify-between gap-3" aria-label="Profile navigation">
+                    <Link href="/" className="clubhouse-button w-fit px-3 py-2 text-sm font-bold">
+                        <ArrowLeft size={20} /> Back to Dashboard
+                    </Link>
+                    <ThemeToggle />
+                </nav>
 
                 {/* Header */}
-                <section className="clubhouse-hero sketch-card flex flex-col items-center gap-5 p-4 sm:p-6 md:flex-row md:items-stretch">
+                <section className="clubhouse-hero profile-hero sketch-card flex flex-col items-center gap-5 p-4 sm:p-6 md:flex-row md:items-stretch">
                     <UserAvatar
                         name={user.name}
                         avatarUrl={user.avatar_url}
@@ -243,24 +247,24 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                                 <h1 className="mb-3 text-3xl font-black text-[#fffdf7] sm:text-4xl">
                                     <PrivacyText text={user.name} id={user.id} />
                                 </h1>
-                                <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center md:justify-start">
-                                    <div className="flex items-center justify-center gap-2 rounded border border-white/40 bg-black/20 px-3 py-2">
+                                <div className="profile-stats grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center md:justify-start">
+                                    <div className="profile-stat">
                                         <Trophy size={16} className="text-[var(--gold)]" />
                                         <span className="font-bold text-lg">{totalScore}</span>
                                         <span className="text-xs uppercase text-white/65">pts</span>
                                     </div>
-                                    <div className="flex items-center justify-center gap-2 rounded border border-white/40 bg-black/20 px-3 py-2">
+                                    <div className="profile-stat">
                                         <Star size={16} className="text-[var(--gold)]" />
                                         <span className="font-bold text-lg">{avgGrade}</span>
                                         <span className="text-xs uppercase text-white/65">avg</span>
                                     </div>
-                                    <div className="flex items-center justify-center gap-2 rounded border border-white/40 bg-black/20 px-3 py-2">
+                                    <div className="profile-stat">
                                         <Trophy size={16} className="text-[var(--gold)]" />
                                         <span className="font-bold text-lg">{weeklyWins}</span>
                                         <span className="text-xs uppercase text-white/65">Weekly wins</span>
                                     </div>
                                     {seasonTitles > 0 && (
-                                        <div className="flex items-center justify-center gap-2 rounded border border-[var(--gold)] bg-black/20 px-3 py-2">
+                                        <div className="profile-stat border-[var(--gold)]">
                                             <span className="text-lg">👑</span>
                                             <span className="text-lg font-bold text-[var(--gold)]">{seasonTitles}</span>
                                             <span className="text-xs uppercase text-white/65">Season {seasonTitles === 1 ? 'title' : 'titles'}</span>
@@ -271,7 +275,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
 
                             {/* Contribution Graph (Month View) */}
                             <div className="flex w-full max-w-[240px] flex-col items-center lg:items-end">
-                                <div className="relative w-full rounded border border-white/40 bg-black/20 p-3">
+                                <div className="profile-activity relative w-full p-3">
                                     <div className="flex justify-between items-center mb-2">
                                         <button
                                             onClick={() => setShownMonth(prev => subMonths(prev, 1))}
@@ -308,11 +312,11 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                                 {/* Legend */}
                                 <div className="mt-2 flex items-center gap-2 text-[10px] text-white/65">
                                     <span>Less</span>
-                                    <div className="w-2.5 h-2.5 rounded-[1px] bg-red-500"></div>
-                                    <div className="w-2.5 h-2.5 rounded-[1px] bg-neutral-800"></div>
-                                    <div className="w-2.5 h-2.5 rounded-[1px] bg-emerald-800"></div>
-                                    <div className="w-2.5 h-2.5 rounded-[1px] bg-emerald-500"></div>
-                                    <div className="w-2.5 h-2.5 rounded-[1px] bg-emerald-400"></div>
+                                    <i className="activity-key bg-[var(--activity-negative-high)]" />
+                                    <i className="activity-key bg-[var(--activity-empty)]" />
+                                    <i className="activity-key bg-[var(--activity-low)]" />
+                                    <i className="activity-key bg-[var(--activity-medium)]" />
+                                    <i className="activity-key bg-[var(--activity-high)]" />
                                     <span>More</span>
                                 </div>
                             </div>
@@ -386,7 +390,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                         <div className="space-y-4">
                             {commits.map((commit) => (
                                 <div key={commit.id} className="paper-slip p-4">
-                                    <div className="flex justify-between items-start mb-2">
+                                    <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
                                         <span className="text-xs text-[var(--muted-ink)]">{formatDistanceToNow(parseSupabaseDate(commit.created_at))} ago</span>
                                         <span className={`font-bold ${commit.grade < 0 ? 'text-[var(--pencil-red)]' : 'text-[var(--score-green)]'}`}>
                                             {commit.grade > 0 ? '+' : ''}{commit.grade} pts
@@ -404,11 +408,11 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                         </div>
 
                         {/* Pagination Controls */}
-                        <div className="flex justify-between items-center mt-6">
+                        <div className="mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
                             <button
                                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                                 disabled={page === 0}
-                                className="clubhouse-button px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
+                                className="clubhouse-button justify-self-start px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
                             >
                                 <ChevronLeft size={16} /> Previous
                             </button>
@@ -416,7 +420,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                             <button
                                 onClick={() => setPage((p) => p + 1)}
                                 disabled={commits.length < 15}
-                                className="clubhouse-button px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
+                                className="clubhouse-button justify-self-end px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
                             >
                                 Next <ChevronRight size={16} />
                             </button>
