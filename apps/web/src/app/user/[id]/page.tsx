@@ -211,80 +211,80 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
         </svg>
     );
 
-    if (loading) return <div className="min-h-screen bg-neutral-900 text-white flex items-center justify-center">Loading...</div>;
-    if (!user) return <div className="min-h-screen bg-neutral-900 text-white flex items-center justify-center">User not found</div>;
+    if (loading) return <main className="clubhouse-page flex items-center justify-center p-4"><div className="sketch-card px-6 py-4 font-bold">Loading profile...</div></main>;
+    if (!user) return <main className="clubhouse-page flex items-center justify-center p-4"><div className="sketch-card px-6 py-4 font-bold">User not found</div></main>;
 
     const totalScore = stats.reduce((acc, c) => acc + (c.grade || 0), 0);
     const avgGrade = stats.length > 0 ? (totalScore / stats.length).toFixed(1) : '0.0';
     const weeklyWins = user?.weekly_wins_count || 0;
 
     return (
-        <main className="min-h-screen bg-neutral-900 text-white p-8 font-sans">
-            <div className="max-w-6xl mx-auto space-y-8">
+        <main className="clubhouse-page">
+            <div className="clubhouse-shell space-y-6 sm:space-y-8">
 
                 {/* Nav */}
-                <Link href="/" className="flex items-center gap-2 text-neutral-400 hover:text-emerald-400 transition-colors">
+                <Link href="/" className="clubhouse-button w-fit px-3 py-2 text-sm font-bold">
                     <ArrowLeft size={20} /> Back to Dashboard
                 </Link>
 
                 {/* Header */}
-                <div className="bg-neutral-800/50 p-6 rounded-2xl border border-neutral-700/50 flex flex-col md:flex-row items-center gap-6">
+                <section className="clubhouse-hero sketch-card flex flex-col items-center gap-5 p-4 sm:p-6 md:flex-row md:items-stretch">
                     <UserAvatar
                         name={user.name}
                         avatarUrl={user.avatar_url}
                         userId={user.id}
                         size="xl"
-                        className="border-neutral-700"
+                        className="border-[var(--line)]"
                     />
 
-                    <div className="flex-1 text-center md:text-left">
-                        <div className="flex flex-col md:flex-row justify-between items-center w-full">
-                            <div>
-                                <h1 className="text-3xl font-bold text-white mb-2">
+                    <div className="relative z-10 flex-1 text-center md:text-left">
+                        <div className="flex h-full w-full flex-col items-center justify-between gap-5 lg:flex-row lg:items-center">
+                            <div className="w-full">
+                                <h1 className="mb-3 text-3xl font-black text-[#fffdf7] sm:text-4xl">
                                     <PrivacyText text={user.name} id={user.id} />
                                 </h1>
-                                <div className="flex gap-4 justify-center md:justify-start mb-4 md:mb-0">
-                                    <div className="bg-neutral-900/50 px-4 py-2 rounded-lg flex items-center gap-2 border border-neutral-700">
-                                        <Trophy size={16} className="text-yellow-400" />
+                                <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center md:justify-start">
+                                    <div className="flex items-center justify-center gap-2 rounded border border-white/40 bg-black/20 px-3 py-2">
+                                        <Trophy size={16} className="text-[var(--gold)]" />
                                         <span className="font-bold text-lg">{totalScore}</span>
-                                        <span className="text-xs text-neutral-500 uppercase">pts</span>
+                                        <span className="text-xs uppercase text-white/65">pts</span>
                                     </div>
-                                    <div className="bg-neutral-900/50 px-4 py-2 rounded-lg flex items-center gap-2 border border-neutral-700">
-                                        <Star size={16} className="text-emerald-400" />
+                                    <div className="flex items-center justify-center gap-2 rounded border border-white/40 bg-black/20 px-3 py-2">
+                                        <Star size={16} className="text-[var(--gold)]" />
                                         <span className="font-bold text-lg">{avgGrade}</span>
-                                        <span className="text-xs text-neutral-500 uppercase">avg</span>
+                                        <span className="text-xs uppercase text-white/65">avg</span>
                                     </div>
-                                    <div className="bg-neutral-900/50 px-4 py-2 rounded-lg flex items-center gap-2 border border-neutral-700">
-                                        <Trophy size={16} className="text-yellow-400" />
+                                    <div className="flex items-center justify-center gap-2 rounded border border-white/40 bg-black/20 px-3 py-2">
+                                        <Trophy size={16} className="text-[var(--gold)]" />
                                         <span className="font-bold text-lg">{weeklyWins}</span>
-                                        <span className="text-xs text-neutral-500 uppercase">Weekly wins</span>
+                                        <span className="text-xs uppercase text-white/65">Weekly wins</span>
                                     </div>
                                     {seasonTitles > 0 && (
-                                        <div className="bg-neutral-900/50 px-4 py-2 rounded-lg flex items-center gap-2 border border-yellow-600/50">
+                                        <div className="flex items-center justify-center gap-2 rounded border border-[var(--gold)] bg-black/20 px-3 py-2">
                                             <span className="text-lg">👑</span>
-                                            <span className="font-bold text-lg text-yellow-400">{seasonTitles}</span>
-                                            <span className="text-xs text-neutral-500 uppercase">Season {seasonTitles === 1 ? 'title' : 'titles'}</span>
+                                            <span className="text-lg font-bold text-[var(--gold)]">{seasonTitles}</span>
+                                            <span className="text-xs uppercase text-white/65">Season {seasonTitles === 1 ? 'title' : 'titles'}</span>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
                             {/* Contribution Graph (Month View) */}
-                            <div className="flex flex-col items-center md:items-end w-full max-w-[200px]">
-                                <div className="p-3 bg-neutral-900/30 rounded-xl border border-neutral-800 w-full relative">
+                            <div className="flex w-full max-w-[240px] flex-col items-center lg:items-end">
+                                <div className="relative w-full rounded border border-white/40 bg-black/20 p-3">
                                     <div className="flex justify-between items-center mb-2">
                                         <button
                                             onClick={() => setShownMonth(prev => subMonths(prev, 1))}
                                             disabled={shownMonth < new Date(2026, 0, 1)}
-                                            className="p-1 hover:bg-neutral-800 rounded text-neutral-400 disabled:opacity-20"
+                                            className="rounded p-1 text-white/75 hover:bg-white/10 disabled:opacity-20"
                                         >
                                             <ChevronLeft size={14} />
                                         </button>
-                                        <span className="text-xs font-bold text-neutral-300">{format(shownMonth, 'MMMM yyyy')}</span>
+                                        <span className="text-xs font-bold text-white">{format(shownMonth, 'MMMM yyyy')}</span>
                                         <button
                                             onClick={() => setShownMonth(prev => addMonths(prev, 1))}
                                             disabled={isSameMonth(shownMonth, new Date())}
-                                            className="p-1 hover:bg-neutral-800 rounded text-neutral-400 disabled:opacity-20"
+                                            className="rounded p-1 text-white/75 hover:bg-white/10 disabled:opacity-20"
                                         >
                                             <ChevronRight size={14} />
                                         </button>
@@ -294,11 +294,11 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                                     {/* Tooltip Portal */}
                                     {hovered && (
                                         <div
-                                            className="fixed z-50 bg-neutral-800 border border-neutral-700 p-2 rounded-lg shadow-xl pointer-events-none transform -translate-x-1/2 -translate-y-full mt-[-8px]"
+                                            className="sketch-card fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-full p-2 text-[var(--ink)]"
                                             style={{ left: hovered.x, top: hovered.y }}
                                         >
-                                            <div className="text-xs text-neutral-400 font-mono mb-0.5">{format(new Date(`${hovered.date}T00:00:00`), 'MMM do, yyyy')}</div>
-                                            <div className={`text-sm font-bold ${hovered.score > 0 ? 'text-emerald-400' : hovered.score < 0 ? 'text-red-400' : 'text-neutral-200'}`}>
+                                            <div className="mb-0.5 font-mono text-xs text-[var(--muted-ink)]">{format(new Date(`${hovered.date}T00:00:00`), 'MMM do, yyyy')}</div>
+                                            <div className={`text-sm font-bold ${hovered.score > 0 ? 'text-[var(--score-green)]' : hovered.score < 0 ? 'text-[var(--pencil-red)]' : 'text-[var(--ink)]'}`}>
                                                 {hovered.score > 0 ? '+' : ''}{hovered.score} pts
                                             </div>
                                         </div>
@@ -306,7 +306,7 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                                 </div>
 
                                 {/* Legend */}
-                                <div className="flex items-center gap-2 mt-2 text-[10px] text-neutral-500">
+                                <div className="mt-2 flex items-center gap-2 text-[10px] text-white/65">
                                     <span>Less</span>
                                     <div className="w-2.5 h-2.5 rounded-[1px] bg-red-500"></div>
                                     <div className="w-2.5 h-2.5 rounded-[1px] bg-neutral-800"></div>
@@ -318,36 +318,36 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
 
                     {/* Goals Column */}
                     <div className="space-y-6">
-                        <h2 className="text-xl font-semibold flex items-center gap-2 text-yellow-400">
+                        <h2 className="flex items-center gap-2 text-xl font-black text-[var(--club-green)]">
                             <Target /> Active Goals
                         </h2>
                         <div className="space-y-3">
                             {goals.map((goal) => (
-                                <div key={goal.id} className="bg-neutral-800/30 p-4 rounded-xl border border-neutral-700/50">
-                                    <p className="text-neutral-200">{goal.description}</p>
-                                    <span className="text-xs text-neutral-500 mt-2 block">Set {formatDistanceToNow(new Date(goal.created_at))} ago</span>
+                                <div key={goal.id} className="paper-slip p-4">
+                                    <p>{goal.description}</p>
+                                    <span className="mt-2 block text-xs text-[var(--muted-ink)]">Set {formatDistanceToNow(new Date(goal.created_at))} ago</span>
                                 </div>
                             ))}
-                            {goals.length === 0 && <span className="text-neutral-500 italic">No active goals.</span>}
+                            {goals.length === 0 && <span className="italic text-[var(--muted-ink)]">No active goals.</span>}
                         </div>
 
                         {/* Completed Goals Section */}
                         {completedGoals.length > 0 && (
                             <>
-                                <h2 className="text-xl font-semibold flex items-center gap-2 text-neutral-500 mt-8">
+                                <h2 className="mt-8 flex items-center gap-2 text-xl font-black text-[var(--muted-ink)]">
                                     ✅ Completed Goals
                                 </h2>
                                 <div className="space-y-3">
                                     {completedGoals.map((goal) => (
-                                        <div key={goal.id} className="bg-neutral-800/20 p-4 rounded-xl border border-neutral-700/30">
-                                            <p className="text-neutral-500 line-through">{goal.description}</p>
-                                            <span className="text-xs text-neutral-600 mt-2 block">Completed {formatDistanceToNow(new Date(goal.updated_at || goal.created_at))} ago</span>
+                                        <div key={goal.id} className="paper-slip p-4 opacity-75">
+                                            <p className="line-through text-[var(--muted-ink)]">{goal.description}</p>
+                                            <span className="mt-2 block text-xs text-[var(--muted-ink)]">Completed {formatDistanceToNow(new Date(goal.updated_at || goal.created_at))} ago</span>
                                         </div>
                                     ))}
                                 </div>
@@ -357,26 +357,26 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
 
                     {/* Commits Column */}
                     <div className="md:col-span-2 space-y-6">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-semibold flex items-center gap-2 text-emerald-400">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <h2 className="flex items-center gap-2 text-xl font-black text-[var(--club-green)]">
                                 <History /> Commit History
                             </h2>
-                            <div className="flex bg-neutral-800 rounded-lg p-1">
+                            <div className="grid grid-cols-3 rounded border-2 border-[var(--line)] bg-[var(--paper-deep)] p-1">
                                 <button
                                     onClick={() => { setFilter('all'); setPage(0); }}
-                                    className={`px-3 py-1 rounded-md text-sm transition-colors ${filter === 'all' ? 'bg-neutral-700 text-white' : 'text-neutral-400 hover:text-white'}`}
+                                    className={`rounded px-3 py-1 text-sm font-bold ${filter === 'all' ? 'bg-[var(--board-green)] text-white' : 'text-[var(--muted-ink)]'}`}
                                 >
                                     All
                                 </button>
                                 <button
                                     onClick={() => { setFilter('positive'); setPage(0); }}
-                                    className={`px-3 py-1 rounded-md text-sm transition-colors ${filter === 'positive' ? 'bg-emerald-900/50 text-emerald-400' : 'text-neutral-400 hover:text-emerald-400'}`}
+                                    className={`rounded px-3 py-1 text-sm font-bold ${filter === 'positive' ? 'bg-[var(--board-green)] text-white' : 'text-[var(--muted-ink)]'}`}
                                 >
                                     Good
                                 </button>
                                 <button
                                     onClick={() => { setFilter('negative'); setPage(0); }}
-                                    className={`px-3 py-1 rounded-md text-sm transition-colors ${filter === 'negative' ? 'bg-red-900/50 text-red-400' : 'text-neutral-400 hover:text-red-400'}`}
+                                    className={`rounded px-3 py-1 text-sm font-bold ${filter === 'negative' ? 'bg-[var(--pencil-red)] text-white' : 'text-[var(--muted-ink)]'}`}
                                 >
                                     Bad
                                 </button>
@@ -385,22 +385,22 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
 
                         <div className="space-y-4">
                             {commits.map((commit) => (
-                                <div key={commit.id} className="bg-neutral-800/50 p-4 rounded-xl border border-neutral-700/50 hover:border-emerald-500/30 transition-all">
+                                <div key={commit.id} className="paper-slip p-4">
                                     <div className="flex justify-between items-start mb-2">
-                                        <span className="text-xs text-neutral-500">{formatDistanceToNow(parseSupabaseDate(commit.created_at))} ago</span>
-                                        <span className={`font-bold ${commit.grade < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                                        <span className="text-xs text-[var(--muted-ink)]">{formatDistanceToNow(parseSupabaseDate(commit.created_at))} ago</span>
+                                        <span className={`font-bold ${commit.grade < 0 ? 'text-[var(--pencil-red)]' : 'text-[var(--score-green)]'}`}>
                                             {commit.grade > 0 ? '+' : ''}{commit.grade} pts
                                         </span>
                                     </div>
-                                    <p className="text-neutral-300 mb-3">{commit.message}</p>
+                                    <p className="mb-3 break-words">{commit.message}</p>
                                     {commit.ai_feedback && (
-                                        <div className={`bg-neutral-900/50 p-3 rounded-lg text-sm border-l-2 ${commit.grade < 0 ? 'border-red-500' : 'border-emerald-500'}`}>
-                                            <p className="text-neutral-400 italic">&quot;{commit.ai_feedback}&quot;</p>
+                                        <div className={`rounded bg-[var(--paper-deep)] p-3 text-sm border-l-4 ${commit.grade < 0 ? 'border-[var(--pencil-red)]' : 'border-[var(--score-green)]'}`}>
+                                            <p className="italic text-[var(--muted-ink)]">&quot;{commit.ai_feedback}&quot;</p>
                                         </div>
                                     )}
                                 </div>
                             ))}
-                            {commits.length === 0 && <span className="text-neutral-500 italic">No commits found for this filter.</span>}
+                            {commits.length === 0 && <span className="italic text-[var(--muted-ink)]">No commits found for this filter.</span>}
                         </div>
 
                         {/* Pagination Controls */}
@@ -408,15 +408,15 @@ export default function UserProfile({ params }: { params: Promise<{ id: string }
                             <button
                                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                                 disabled={page === 0}
-                                className="flex items-center gap-1 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded transition-colors text-white"
+                                className="clubhouse-button px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
                             >
                                 <ChevronLeft size={16} /> Previous
                             </button>
-                            <span className="text-neutral-400 text-sm">Page {page + 1}</span>
+                            <span className="text-sm font-bold text-[var(--muted-ink)]">Page {page + 1}</span>
                             <button
                                 onClick={() => setPage((p) => p + 1)}
                                 disabled={commits.length < 15}
-                                className="flex items-center gap-1 bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded transition-colors text-white"
+                                className="clubhouse-button px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-40 sm:px-4"
                             >
                                 Next <ChevronRight size={16} />
                             </button>
